@@ -1,0 +1,55 @@
+data:
+  source: csv
+  csv_path: data/raw/reviews.csv
+  snowflake:
+    account: ${SNOWFLAKE_ACCOUNT}
+    warehouse: COMPUTE_WH
+    database: PRODUCT_ANALYTICS
+    schema: RAW
+    table: PRODUCT_REVIEWS
+    role: ANALYST_ROLE
+  sample_size: 50000
+  test_split: 0.2
+  random_seed: 42
+
+preprocessing:
+  max_length: 256
+  min_review_length: 10
+  remove_html: true
+  lowercase: true
+
+models:
+  bert:
+    model_name: bert-base-uncased
+    num_labels: 5
+    epochs: 3
+    batch_size: 32
+    learning_rate: 2.0e-5
+    warmup_steps: 100
+    max_length: 256
+  classical:
+    - logistic_regression
+    - random_forest
+    - mlp
+  random_forest:
+    n_estimators: 200
+    max_depth: 50
+  mlp:
+    hidden_layer_sizes: [256, 128]
+    max_iter: 300
+  logistic_regression:
+    max_iter: 1000
+    C: 1.0
+
+summarization:
+  method: extractive
+  num_sentences: 3
+  min_sentence_length: 5
+
+tracking:
+  experiment_name: review-analytics
+  tracking_uri: mlruns
+
+dashboard:
+  port: 8501
+  page_title: Product Review Analytics
