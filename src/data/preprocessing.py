@@ -60,9 +60,15 @@ class TextPreprocessor:
         return df
 
     def split_data(self, df: pd.DataFrame, test_size: float = 0.2, seed: int = 42):
-        train_df, test_df = train_test_split(
-            df, test_size=test_size, random_state=seed, stratify=df["label"]
-        )
+        try:
+            train_df, test_df = train_test_split(
+                df, test_size=test_size, random_state=seed, stratify=df["label"]
+            )
+        except ValueError:
+            # not enough samples per class for stratification
+            train_df, test_df = train_test_split(
+                df, test_size=test_size, random_state=seed
+            )
         logger.info(f"Split: {len(train_df)} train, {len(test_df)} test")
         return train_df.reset_index(drop=True), test_df.reset_index(drop=True)
 

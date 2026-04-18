@@ -24,7 +24,6 @@ class ClassicalModels:
             "logistic_regression": LogisticRegression(
                 max_iter=lr_cfg.get("max_iter", 1000),
                 C=lr_cfg.get("C", 1.0),
-                multi_class="multinomial",
                 solver="lbfgs",
                 n_jobs=-1,
             ),
